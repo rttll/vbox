@@ -15,21 +15,22 @@ const path = ref(null);
 const path2 = ref(null);
 
 const vb = computed(() => {
-  let vbox = values.vbox.value;
+  const vbox = values.vbox.value;
   return Object.keys(vbox)
     .map((k) => vbox[k])
     .join(' ');
 });
 
-const bbox = computed(() => {
-  // const a = convertCoordinates(path.value, path2.value, { x: 0, y: 0 });
-  if (path.value === null) return null;
-  return path.value.getBBox();
-});
+// const bbox = computed(() => {
+//   // const a = convertCoordinates(path.value, path2.value, { x: 0, y: 0 });
+//   if (path.value === null) return null;
+//   return path.value.getBBox();
+// });
 
-watch(bbox, () => {
-  log(bbox.value);
-});
+// watch(vb, () => {
+//   const vbox = values.vbox.value;
+//   // log(bbox.value.width);
+// });
 </script>
 
 <template>

@@ -21,6 +21,7 @@ const vbox = refs.vbox.value;
 const value = computed(() => vbox[field]);
 
 const onChange = (v) => {
+  if (v.length === 0) return;
   const value = parseInt(v);
   store.$patch({ vbox: { ...{ [field]: value } } });
 
@@ -61,6 +62,11 @@ const onChange = (v) => {
         path.setAttribute(config.offsetAttr, offset);
       }
     });
+
+    const bbox = path.getBBox();
+    const rect = path.getBoundingClientRect();
+    const { width } = bbox;
+    const w = width + width * percentChange;
   }
 };
 
