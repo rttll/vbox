@@ -1,5 +1,5 @@
 <script setup>
-import { computed, watch } from 'vue';
+import { computed, watch, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import Slider from '@vueform/slider';
@@ -16,21 +16,37 @@ const { field, min, max, link } = defineProps(['field', 'min', 'max', 'link']);
 const store = useVBoxStore();
 const refs = storeToRefs(store);
 
+const cache = refs.cache.value;
 const vbox = refs.vbox.value;
 const value = computed(() => vbox[field]);
 
 const onChange = (value) => {
   store.$patch({ vbox: { ...{ [field]: value } } });
 
-  if (link && refs.control.value === field) {
+  const isControll = refs.control.value === field;
+  if (link && isControll) {
     // relative change of this control
-    const d = defaults.vbox[field];
-    const percentChange = value / d;
+    const percentChange = value / defaults.vbox[field];
 
     // set value of other control, based on this control's change percent
     const targetValue = defaults.vbox[link] * percentChange;
     store.$patch({ vbox: { ...{ [link]: targetValue } } });
+
+    if (cache.x !== undefined) {
+      log(cache.x);
+      const x = cache.x * percentChange;
+      store.$patch({ vbox: { ...{ x } } });
+    }
+    if (cache.y !== undefined) {
+      const y = cache.y * percentChange;
+      store.$patch({ vbox: { ...{ y } } });
+    }
   }
+};
+
+const onEnd = (value) => {
+  log('cache', field, value);
+  store.$patch({ cache: { ...{ [field]: value } } });
 };
 </script>
 
@@ -63,6 +79,7 @@ const onChange = (value) => {
       :max="max || 100"
       :value="value"
       @slide="onChange"
+      @end="onEnd"
     />
   </div>
 </template>

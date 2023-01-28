@@ -46,8 +46,6 @@ watch(values.vbox.value, () => {
   const rect = path.value.getBoundingClientRect();
   // const c = getCoordinate(rect.x, rect.y);
   // log(c);
-
-  log(MotionPathPlugin);
 });
 </script>
 
