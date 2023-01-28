@@ -5,8 +5,10 @@ import { useVBoxStore } from './stores/vbox';
 
 import Control from './components/Control.vue';
 import Display from './components/Display.vue';
+import LinkControl from './components/LinkControl.vue';
 
 const store = useVBoxStore();
+const { reset } = store;
 
 store.$subscribe((_, state) => {
   localStorage.setItem('svg', JSON.stringify(state));
@@ -14,15 +16,38 @@ store.$subscribe((_, state) => {
 </script>
 
 <template>
-  <div class="grid grid-cols-2 gap-4 h-screen">
-    <section class="space-y-4 p-4">
-      <Control :min="-100" :max="300" field="x" />
-      <Control :min="-100" :max="300" field="y" />
-      <Control :min="10" :max="1000" field="width" />
-      <Control :min="10" :max="1000" field="height" />
-    </section>
+  <div class="grid grid-rows-2 gap-4 h-screen p-4">
     <section>
       <Display />
+    </section>
+    <section class="space-y-4 p-4">
+      <Control :min="-300" :max="300" field="x" />
+      <Control :min="-300" :max="300" field="y" />
+
+      <div class="flex space-x-2 items-center">
+        <LinkControl field="width" />
+        <Control
+          :min="10"
+          :max="1000"
+          field="width"
+          link="height"
+          key="width"
+        />
+      </div>
+
+      <div class="flex space-x-2 items-center">
+        <LinkControl field="height" />
+        <Control
+          :min="10"
+          :max="1000"
+          field="height"
+          link="width"
+          key="height"
+        />
+      </div>
+      <div>
+        <a href="#" @click.prevent="reset">Reset</a>
+      </div>
     </section>
   </div>
 </template>

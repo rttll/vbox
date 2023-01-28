@@ -1,15 +1,24 @@
 // stores/counter.js
 import { defineStore } from 'pinia';
 
+const defaults = {
+  vbox: { x: 0, y: 0, width: 600, height: 300 },
+  control: 'width',
+};
 const saved = localStorage.getItem('svg');
-const init = saved
-  ? JSON.parse(saved)
-  : { x: 0, y: 0, width: 100, height: 100 };
+const init = saved ? JSON.parse(saved) : defaults;
 
 const useVBoxStore = defineStore('vbox', {
   state: () => {
     return init;
   },
+  actions: {
+    reset() {
+      for (let k in defaults) {
+        this[k] = defaults[k];
+      }
+    },
+  },
 });
 
-export { useVBoxStore };
+export { useVBoxStore, defaults };
