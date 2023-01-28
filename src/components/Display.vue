@@ -36,17 +36,11 @@ onMounted(() => {
       :viewBox="vb"
     >
       <g id="group">
-        <rect ref="path2" width="100" height="100" x="0" y="0" fill="blue" />
-        <rect
-          id="path"
-          ref="path"
-          width="100"
-          height="100"
-          x="10"
-          y="10"
-          data-x="10"
-          data-y="10"
-        />
+        <text id="path" x="10" y="10" dominant-baseline="hanging">
+          hi there, friend
+        </text>
+        <!-- <rect ref="path2" width="100" height="100" x="0" y="0" fill="blue" /> -->
+        <!-- <rect id="path" ref="path" width="100" height="100" /> -->
       </g>
     </svg>
   </div>

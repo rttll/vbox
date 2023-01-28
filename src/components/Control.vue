@@ -43,15 +43,22 @@ const onChange = (v) => {
       store.$patch({ vbox: { ...{ y } } });
     }
 
-    // also offset by any x- y- values set on element
+    // also offset by value of any x/y attrs on element
     const path = document.getElementById('path');
-    ['x', 'y'].forEach((prop) => {
-      // Store the base value of x/y in a data prop
-      const base = path.dataset[prop];
-      if (base) {
-        // and use that to set the x/y attrs
-        const offset = parseInt(base) * percentChange;
-        path.setAttribute(prop, offset);
+    [
+      {
+        attr: 'x',
+        offsetAttr: 'dx',
+      },
+      {
+        attr: 'y',
+        offsetAttr: 'dy',
+      },
+    ].forEach((config) => {
+      if (path.hasAttribute(config.attr)) {
+        const value = parseInt(path.getAttribute(config.attr));
+        const offset = 0 - (value - value * percentChange);
+        path.setAttribute(config.offsetAttr, offset);
       }
     });
   }
