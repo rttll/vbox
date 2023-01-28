@@ -19,33 +19,8 @@ const vb = computed(() => {
     .join(' ');
 });
 
-const getCoordinate = (x, y, sctm = null, transform = null) => {
-  const p = new DOMPoint(x, y);
-  let screenTransform;
-  if (sctm === null) {
-    screenTransform = document.getElementById('group').getScreenCTM();
-  } else {
-    screenTransform = sctm;
-  }
-  // now invert it, so we can transform from screen/viewport to element
-  const inverseScreenTransform = screenTransform.inverse();
-
-  // transform the point using the inverted matrix
-  const transformedPoint = p.matrixTransform(inverseScreenTransform);
-
-  // adjust the point for the currently applied scale on the element
-  if (transform !== null) {
-    transformedPoint.x *= transform[0]; // scale x
-    transformedPoint.y *= transform[3]; // scale y
-  }
-
-  return { x: transformedPoint.x, y: transformedPoint.y };
-};
-
-watch(values.vbox.value, () => {
-  const rect = path.value.getBoundingClientRect();
-  // const c = getCoordinate(rect.x, rect.y);
-  // log(c);
+onMounted(() => {
+  log(path.value.getBBox());
 });
 </script>
 
@@ -59,11 +34,7 @@ watch(values.vbox.value, () => {
       :viewBox="vb"
     >
       <g id="group">
-        <rect id="to" ref="to" width="10" height="10" x="-100" y="0" />
         <rect id="path" ref="path" width="100" height="100" stroke="red" />
-        <!-- <path
-          d="m150 0 35.41 108.98H300l-92.71 67.36 35.42 108.98L150 217.96l-92.71 67.36 35.42-108.98L0 108.98h114.59L150 0z"
-        /> -->
       </g>
     </svg>
   </div>

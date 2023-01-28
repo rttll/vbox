@@ -1,5 +1,6 @@
 <script setup>
 import { reactive, computed } from 'vue';
+import { storeToRefs } from 'pinia';
 
 import { useVBoxStore } from './stores/vbox';
 
@@ -8,10 +9,18 @@ import Display from './components/Display.vue';
 import LinkControl from './components/LinkControl.vue';
 
 const store = useVBoxStore();
+const values = storeToRefs(store);
 const { reset } = store;
 
 store.$subscribe((_, state) => {
   localStorage.setItem('svg', JSON.stringify(state));
+});
+
+const vb = computed(() => {
+  let vbox = values.vbox.value;
+  return Object.keys(vbox)
+    .map((k) => vbox[k])
+    .join(' ');
 });
 </script>
 
@@ -44,6 +53,9 @@ store.$subscribe((_, state) => {
           link="width"
           key="height"
         />
+      </div>
+      <div>
+        {{ vb }}
       </div>
       <div>
         <a href="#" @click.prevent="reset">Reset</a>

@@ -45,7 +45,6 @@ const onChange = (value) => {
 };
 
 const onEnd = (value) => {
-  log('cache', field, value);
   store.$patch({ cache: { ...{ [field]: value } } });
 };
 </script>
