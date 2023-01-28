@@ -1,16 +1,18 @@
 <script setup>
 import { watch, reactive, computed, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
-import MotionPathPlugin from 'gsap';
+import { MotionPathPlugin } from 'gsap/all';
 import { useVBoxStore } from '../stores/vbox';
 
 const { log } = console;
 const { convertCoordinates } = MotionPathPlugin;
 
-const svg = ref(null);
-const path = ref(null);
 const store = useVBoxStore();
 const values = storeToRefs(store);
+
+const svg = ref(null);
+const path = ref(null);
+const path2 = ref(null);
 
 const vb = computed(() => {
   let vbox = values.vbox.value;
@@ -20,7 +22,7 @@ const vb = computed(() => {
 });
 
 onMounted(() => {
-  log(path.value.getBBox());
+  // const a = convertCoordinates(path.value, path2.value, { x: 0, y: 0 });
 });
 </script>
 
@@ -34,18 +36,18 @@ onMounted(() => {
       :viewBox="vb"
     >
       <g id="group">
-        <rect id="path" ref="path" width="100" height="100" stroke="red" />
+        <rect ref="path2" width="100" height="100" x="0" y="0" fill="blue" />
+        <rect
+          id="path"
+          ref="path"
+          width="100"
+          height="100"
+          x="10"
+          y="10"
+          data-x="10"
+          data-y="10"
+        />
       </g>
     </svg>
   </div>
 </template>
-
-<style>
-svg::before {
-  content: '' attr(width) '';
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-</style>

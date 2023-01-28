@@ -9,18 +9,22 @@ const { field, inc, dec } = defineProps(['field', 'inc', 'dec']);
 const store = useVBoxStore();
 const values = storeToRefs(store);
 
-const value = computed(() => values[field].value);
+const value = computed(() => values.vbox.value[field]);
 
 const onClick = () => {
   const v = inc ? value.value + 1 : value.value - 1;
-  store.$patch({ [field]: v });
+  store.$patch({ vbox: { ...{ [field]: v } } });
 };
 </script>
 
 <template>
   <div class="space-y-1">
-    <a href="#" @click.prevent="onClick">
-      {{ inc ? '+' : '-' }}
+    <a
+      href="#"
+      class="flex w-6 h-6 rounded-full hover:bg-slate-200 transition-colors"
+      @click.prevent="onClick"
+    >
+      <span class="m-auto">{{ inc ? '+' : '-' }}</span>
     </a>
   </div>
 </template>

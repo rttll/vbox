@@ -20,7 +20,8 @@ const cache = refs.cache.value;
 const vbox = refs.vbox.value;
 const value = computed(() => vbox[field]);
 
-const onChange = (value) => {
+const onChange = (v) => {
+  const value = parseInt(v);
   store.$patch({ vbox: { ...{ [field]: value } } });
 
   const isControll = refs.control.value === field;
@@ -32,8 +33,8 @@ const onChange = (value) => {
     const targetValue = defaults.vbox[link] * percentChange;
     store.$patch({ vbox: { ...{ [link]: targetValue } } });
 
+    // Offset by min-x, min-y values of viewbox
     if (cache.x !== undefined) {
-      log(cache.x);
       const x = cache.x * percentChange;
       store.$patch({ vbox: { ...{ x } } });
     }
@@ -41,6 +42,18 @@ const onChange = (value) => {
       const y = cache.y * percentChange;
       store.$patch({ vbox: { ...{ y } } });
     }
+
+    // also offset by any x- y- values set on element
+    const path = document.getElementById('path');
+    ['x', 'y'].forEach((prop) => {
+      // Store the base value of x/y in a data prop
+      const base = path.dataset[prop];
+      if (base) {
+        // and use that to set the x/y attrs
+        const offset = parseInt(base) * percentChange;
+        path.setAttribute(prop, offset);
+      }
+    });
   }
 };
 
@@ -54,17 +67,15 @@ const onEnd = (value) => {
     <div class="flex justify-between">
       <div>
         <label for="">{{ field }} </label>
-        <template v-if="value">
-          <input
-            type="number"
-            :value="value"
-            @keyup="
-              (e) => {
-                onChange(e.target.value);
-              }
-            "
-          />
-        </template>
+        <input
+          type="text"
+          :value="value"
+          @keyup="
+            (e) => {
+              onChange(e.target.value);
+            }
+          "
+        />
       </div>
       <div class="flex space-x-2">
         <Stepper :inc="true" :field="field" />
