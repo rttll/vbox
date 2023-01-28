@@ -21,8 +21,14 @@ const vb = computed(() => {
     .join(' ');
 });
 
-onMounted(() => {
+const bbox = computed(() => {
   // const a = convertCoordinates(path.value, path2.value, { x: 0, y: 0 });
+  if (path.value === null) return null;
+  return path.value.getBBox();
+});
+
+watch(bbox, () => {
+  log(bbox.value);
 });
 </script>
 
@@ -36,7 +42,7 @@ onMounted(() => {
       :viewBox="vb"
     >
       <g id="group">
-        <text id="path" x="10" y="10" dominant-baseline="hanging">
+        <text id="path" ref="path" dominant-baseline="hanging">
           hi there, friend
         </text>
         <!-- <rect ref="path2" width="100" height="100" x="0" y="0" fill="blue" /> -->

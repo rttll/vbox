@@ -36,11 +36,11 @@ const onChange = (v) => {
     // Offset by min-x, min-y values of viewbox
     if (cache.x !== undefined) {
       const x = cache.x * percentChange;
-      store.$patch({ vbox: { ...{ x } } });
+      store.$patch({ vbox: { x } });
     }
     if (cache.y !== undefined) {
       const y = cache.y * percentChange;
-      store.$patch({ vbox: { ...{ y } } });
+      store.$patch({ vbox: { y } });
     }
 
     // also offset by value of any x/y attrs on element
