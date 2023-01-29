@@ -25,7 +25,7 @@ const vb = computed(() => {
 </script>
 
 <template>
-  <div class="grid grid-rows-2 gap-4 h-screen p-4">
+  <div class="grid grid-rows-2 gap-4 h-screen">
     <section>
       <Display />
     </section>

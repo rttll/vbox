@@ -1,7 +1,7 @@
 <script setup>
 import { computed, watch, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
-
+import { MotionPathPlugin } from 'gsap/all';
 import Slider from '@vueform/slider';
 import '@vueform/slider/themes/default.css';
 
@@ -9,6 +9,8 @@ import { useVBoxStore } from '../stores/vbox';
 import Stepper from './Stepper.vue';
 
 import { defaults } from '../stores/vbox';
+
+const { convertCoordinates } = MotionPathPlugin;
 
 const log = console.log;
 
@@ -46,6 +48,7 @@ const onChange = (v) => {
 
     // also offset by value of any x/y attrs on element
     const path = document.getElementById('path');
+    const guide = document.getElementById('guide');
     [
       {
         attr: 'x',
@@ -66,7 +69,34 @@ const onChange = (v) => {
     const bbox = path.getBBox();
     const rect = path.getBoundingClientRect();
     const { width } = bbox;
-    const w = width + width * percentChange;
+    const w = width * percentChange;
+
+    const parentSVG = document.getElementById('parentSVG');
+    const parent = { el: document.getElementById('parent') };
+    parent.rect = parent.el.getBoundingClientRect();
+
+    parent.point = parentSVG.createSVGPoint();
+    parent.point.x = parent.rect.x;
+    parent.point.y = parent.rect.y;
+    parent.point = parent.point.matrixTransform(
+      parent.el.getScreenCTM().inverse()
+    );
+
+    const svg = { el: document.getElementById('svg') };
+    svg.rect = svg.el.getBoundingClientRect();
+
+    svg.point = svg.el.createSVGPoint();
+    svg.point.x = rect.x;
+    svg.point.y = rect.y;
+    svg.point = svg.point.matrixTransform(svg.el.getScreenCTM().inverse());
+
+    const diff = {
+      x: percentChange * (rect.x - parent.rect.x),
+      y: percentChange * (rect.y - parent.rect.y),
+    };
+
+    // path.setAttribute('dx', diff.x);
+    // path.setAttribute('dy', diff.y);
   }
 };
 

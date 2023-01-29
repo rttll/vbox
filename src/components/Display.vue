@@ -1,8 +1,12 @@
 <script setup>
 import { watch, reactive, computed, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
+import gsap from 'gsap';
 import { MotionPathPlugin } from 'gsap/all';
+
 import { useVBoxStore } from '../stores/vbox';
+
+window.gsap = gsap;
 
 const { log } = console;
 const { convertCoordinates } = MotionPathPlugin;
@@ -31,23 +35,58 @@ const vb = computed(() => {
 //   const vbox = values.vbox.value;
 //   // log(bbox.value.width);
 // });
+
+onMounted(() => {
+  // const path = convertToPath(document.getElementById('line'));
+  // log(path);
+});
+
+const box = [
+  [100, 70],
+  [500, 70],
+  [500, 200],
+  [100, 200],
+];
 </script>
 
 <template>
-  <div class="py-4 relative">
+  <div class="relative">
     <svg
+      id="parentSVG"
+      class="absolute"
+      width="600"
+      height="300"
+      viewBox="0 0 600 300"
+    >
+      <path
+        id="parent"
+        d="M 100,70 L 500,70 L 500,200 L 100,200 z"
+        stroke="blue"
+        fill="none"
+      />
+      <rect id="dot" fill="black" x="100" y="70" width="10" height="10" />
+    </svg>
+
+    <svg
+      id="svg"
       ref="svg"
-      class="border border-gray-300"
+      class="border border-gray-300 absolute"
       width="600"
       height="300"
       :viewBox="vb"
     >
       <g id="group">
-        <text id="path" ref="path" dominant-baseline="hanging">
+        <!-- <text id="path" ref="path" dominant-baseline="hanging">
           hi there, friend
+        </text> -->
+
+        <defs>
+          <path id="guide" d="M 100,70 L 500,70 " />
+        </defs>
+
+        <text ref="path" id="path" dominant-baseline="hanging">
+          <textPath href="#guide">this is the end</textPath>
         </text>
-        <!-- <rect ref="path2" width="100" height="100" x="0" y="0" fill="blue" /> -->
-        <!-- <rect id="path" ref="path" width="100" height="100" /> -->
       </g>
     </svg>
   </div>
